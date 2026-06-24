@@ -12,11 +12,20 @@ namespace WebAPI46GIS
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().ConfigureApiBehaviorOptions(options=>
+                options.SuppressModelStateInvalidFilter=true
+            );
             builder.Services.AddDbContext<ITIContext>(options => {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("cs"));
             });
+            builder.Services.AddCors(option => {
+                //open orginal , method ,header
+                option.AddPolicy("MyPolicy", policy => {
+                    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                 
+                });
+            
+            });   
 
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,9 +40,11 @@ namespace WebAPI46GIS
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseStaticFiles();
+            
+            app.UseCors("MyPolicy"); //mileware =>configuration service register serviceproive
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

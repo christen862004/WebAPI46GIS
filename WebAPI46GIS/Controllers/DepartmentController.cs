@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebAPI46GIS.DTO;
 using WebAPI46GIS.Models;
 
 namespace WebAPI46GIS.Controllers
@@ -28,12 +30,25 @@ namespace WebAPI46GIS.Controllers
         [HttpGet("{id:int}")]//api/DEpartment/11 verb get
         public IActionResult GetById(int id)
         {
-            Department dept=context.Departments.FirstOrDefault(d => d.Id == id);
-            if(dept!=null)
-                return Ok(dept);
+            Department dept =context.Departments.Include(d => d.Employees).FirstOrDefault(d => d.Id == id);
+
+            if (dept != null)
+            {
+                DeptWithEmpListDTO deptWithEmpListDTO = new DeptWithEmpListDTO() { DeptId=dept.Id,DeptName=dept.Name};
+                deptWithEmpListDTO.EmpNames=dept.Employees.Select(e=>e.Name).ToList();
+                return Ok(deptWithEmpListDTO);
+            }
             return BadRequest("Invalid id");
         }
         
+
+
+
+
+
+
+
+
         [HttpGet("{name:alpha}")]//api/DEpartment/SD verb get
         public IActionResult GetByName(string name)
         {

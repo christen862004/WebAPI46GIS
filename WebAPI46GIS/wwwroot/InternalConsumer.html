@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <h1>internal Consumer</h1>
+    <input type="button" value="Load" onclick="getDeptData()" />
+    <ul id="data"></ul>
+    <!--Request (JS = using ajax jquery)-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        function getDeptData() {
+            $.ajax({
+                url: "/api/Department/1",
+                success: function (result) {
+                    console.log(result);
+                    $("#data").html(`<li>${result.deptId}</li><li> ${result.deptName}</li>`);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
