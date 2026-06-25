@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI46GIS.Models;
 
@@ -15,6 +16,7 @@ namespace WebAPI46GIS.Controllers
             context = _context;
         }
         [HttpGet("{id}")]
+        [Authorize]//SEACH token "request Header" unauthorize
         public ActionResult<GeneralResponse> getbyid(int id)
         {
             Employee employee=context.Employees.FirstOrDefault(e=>e.Id==id);
